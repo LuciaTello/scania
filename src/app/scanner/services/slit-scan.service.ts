@@ -35,13 +35,16 @@ export class SlitScanService {
     this.sourceCanvas.width = vw;
     this.sourceCanvas.height = vh;
 
-    const outputSize = config().outputSize;
-    if (config().orientation === 'vertical') {
-      this.resultCanvas.width = outputSize;
+    const isSweepMode = config().mode === 'sweep';
+    if (isSweepMode) {
+      this.resultCanvas.width = vw;
+      this.resultCanvas.height = vh;
+    } else if (config().orientation === 'vertical') {
+      this.resultCanvas.width = config().outputSize;
       this.resultCanvas.height = vh;
     } else {
       this.resultCanvas.width = vw;
-      this.resultCanvas.height = outputSize;
+      this.resultCanvas.height = config().outputSize;
     }
     this.resultCtx.clearRect(0, 0, this.resultCanvas.width, this.resultCanvas.height);
 

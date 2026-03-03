@@ -1,5 +1,5 @@
-<div class="scanner-layout">
-  <section class="panel source-panel">
+<div class="scanner-layout" [class.sweep-mode]="mode() === 'sweep'">
+  <section class="panel source-area">
     <h2>Video Source</h2>
     <app-video-source
       [slitPosition]="slitPosition()"
@@ -10,7 +10,16 @@
     />
   </section>
 
-  <section class="panel controls-panel">
+  <section class="panel result-area" [class.sweep-overlay]="mode() === 'sweep'">
+    <h2>Result</h2>
+    <app-scan-result
+      [state]="state()"
+      [sweepMode]="mode() === 'sweep'"
+      (canvasReady)="onCanvasReady($event)"
+    />
+  </section>
+
+  <section class="panel controls-area">
     <h2>Controls</h2>
     <app-slit-controls
       [(orientation)]="orientation"
@@ -23,14 +32,6 @@
       (start)="onStart()"
       (stop)="onStop()"
       (resetScan)="onReset()"
-    />
-  </section>
-
-  <section class="panel result-panel">
-    <h2>Result</h2>
-    <app-scan-result
-      [state]="state()"
-      (canvasReady)="onCanvasReady($event)"
     />
   </section>
 </div>

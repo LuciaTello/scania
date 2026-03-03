@@ -7,13 +7,19 @@
   font-family: system-ui, -apple-system, sans-serif;
 }
 
+/* --- Fixed mode (default): 3-column layout --- */
 .scanner-layout {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
+  grid-template-areas: "source controls result";
   gap: 1.5rem;
   max-width: 1400px;
   margin: 0 auto;
 }
+
+.source-area  { grid-area: source; }
+.result-area  { grid-area: result; }
+.controls-area { grid-area: controls; }
 
 .panel {
   background: #fff;
@@ -31,17 +37,49 @@
   letter-spacing: 0.05em;
 }
 
-.controls-panel {
+.controls-area {
   min-width: 200px;
   max-width: 240px;
+}
+
+/* --- Sweep mode: source + result overlap --- */
+.scanner-layout.sweep-mode {
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "viewport controls";
+}
+
+.sweep-mode .source-area {
+  grid-area: viewport;
+}
+
+.sweep-mode .result-area {
+  grid-area: viewport;
+  z-index: 1;
+  pointer-events: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sweep-mode .result-area h2 {
+  display: none;
+}
+
+.sweep-mode .result-area :deep(.result-actions) {
+  pointer-events: auto;
 }
 
 @media (max-width: 900px) {
   .scanner-layout {
     grid-template-columns: 1fr;
+    grid-template-areas: "source" "controls" "result";
   }
 
-  .controls-panel {
+  .controls-area {
     max-width: none;
+  }
+
+  .scanner-layout.sweep-mode {
+    grid-template-columns: 1fr;
+    grid-template-areas: "viewport" "controls";
   }
 }
