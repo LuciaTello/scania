@@ -1,0 +1,12 @@
+<div class="source-controls">
+  <button [class.active]="sourceType() === 'webcam'" (click)="toggleSource('webcam')">Webcam</button>
+  <button [class.active]="sourceType() === 'file'" (click)="toggleSource('file')">Upload</button>
+  @if (sourceType() === 'file') {
+    <input type="file" accept="video/*" (change)="onFileSelected($event)" />
+  }
+</div>
+
+<div class="video-container">
+  <video #videoEl playsinline muted></video>
+  <div class="slit-overlay" [ngStyle]="overlayStyle"></div>
+</div>

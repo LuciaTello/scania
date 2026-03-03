@@ -1,0 +1,7 @@
+<div class="result-container">
+  <canvas #resultCanvas></canvas>
+</div>
+
+@if (state() === 'complete') {
+  <button class="btn-download" (click)="download()">Download Image</button>
+}

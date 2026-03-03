@@ -1,0 +1,35 @@
+<div class="control-group">
+  <label>Orientation</label>
+  <div class="radio-group">
+    <label>
+      <input type="radio" name="orientation" value="vertical" [ngModel]="orientation()" (ngModelChange)="orientation.set($event)" />
+      Vertical
+    </label>
+    <label>
+      <input type="radio" name="orientation" value="horizontal" [ngModel]="orientation()" (ngModelChange)="orientation.set($event)" />
+      Horizontal
+    </label>
+  </div>
+</div>
+
+<div class="control-group">
+  <label>Slit Position: {{ position() }}%</label>
+  <input type="range" min="0" max="100" [ngModel]="position()" (ngModelChange)="position.set($event)" />
+</div>
+
+<div class="control-group">
+  <label>Line Width: {{ lineWidth() }}px</label>
+  <input type="range" min="1" max="10" [ngModel]="lineWidth()" (ngModelChange)="lineWidth.set($event)" />
+</div>
+
+<div class="actions">
+  @if (state() === 'previewing' || state() === 'idle') {
+    <button class="btn-start" (click)="onStart()" [disabled]="state() === 'idle'">Start Scan</button>
+  }
+  @if (state() === 'scanning') {
+    <button class="btn-stop" (click)="onStop()">Stop</button>
+  }
+  @if (state() === 'complete') {
+    <button class="btn-reset" (click)="onReset()">Reset</button>
+  }
+</div>

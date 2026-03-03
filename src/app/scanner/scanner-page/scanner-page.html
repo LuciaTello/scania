@@ -1,0 +1,32 @@
+<div class="scanner-layout">
+  <section class="panel source-panel">
+    <h2>Video Source</h2>
+    <app-video-source
+      [slitPosition]="slitPosition()"
+      [slitOrientation]="orientation()"
+      [lineWidth]="lineWidth()"
+      (videoReady)="onVideoReady($event)"
+    />
+  </section>
+
+  <section class="panel controls-panel">
+    <h2>Controls</h2>
+    <app-slit-controls
+      [(orientation)]="orientation"
+      [(position)]="position"
+      [(lineWidth)]="lineWidth"
+      [state]="state()"
+      (start)="onStart()"
+      (stop)="onStop()"
+      (resetScan)="onReset()"
+    />
+  </section>
+
+  <section class="panel result-panel">
+    <h2>Result</h2>
+    <app-scan-result
+      [state]="state()"
+      (canvasReady)="onCanvasReady($event)"
+    />
+  </section>
+</div>
