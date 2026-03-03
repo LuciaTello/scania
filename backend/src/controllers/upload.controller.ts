@@ -8,7 +8,8 @@ export async function uploadHandler(req: Request, res: Response, next: NextFunct
       throw new AppError(400, 'No file provided');
     }
 
-    const url = await uploadImage(req.file.buffer);
+    const folder = (req.body?.folder as string) || 'scania';
+    const url = await uploadImage(req.file.buffer, folder);
     res.json({ url });
   } catch (error) {
     next(error);

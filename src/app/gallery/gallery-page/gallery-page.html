@@ -1,0 +1,17 @@
+@if (state() === 'loading') {
+  <div class="gallery-status">Loading...</div>
+}
+
+@if (state() === 'empty') {
+  <div class="gallery-status">No scans saved yet.</div>
+}
+
+@if (state() === 'loaded') {
+  <div class="gallery-grid">
+    @for (img of images(); track img.public_id) {
+      <div class="gallery-item">
+        <img [src]="img.url" [alt]="img.public_id" loading="lazy" />
+      </div>
+    }
+  </div>
+}
