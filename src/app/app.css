@@ -1,9 +1,26 @@
 .app-nav {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
   padding: 0.75rem 1.5rem;
   background: #fff;
   border-bottom: 1px solid #e0e0e0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.nav-user span {
+  color: #555;
 }
 
 .app-nav a {

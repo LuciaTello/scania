@@ -1,6 +1,16 @@
 <nav class="app-nav">
-  <a routerLink="/scanner" routerLinkActive="active">Scanner</a>
-  <a routerLink="/gallery" routerLinkActive="active">Galerie</a>
+  <div class="nav-links">
+    <a routerLink="/scanner" routerLinkActive="active">Scanner</a>
+    <a routerLink="/gallery" routerLinkActive="active">Galerie</a>
+  </div>
+  @if (auth.isAuthenticated()) {
+    <div class="nav-user">
+      <span>{{ auth.user()?.name }}</span>
+      <a (click)="auth.logout()">Logout</a>
+    </div>
+  } @else {
+    <a routerLink="/login" routerLinkActive="active">Login</a>
+  }
 </nav>
 
 <router-outlet />
