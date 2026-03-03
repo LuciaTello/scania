@@ -56,7 +56,8 @@ export class SlitScanService {
       const cfg = config();
 
       this.frameCount++;
-      if (this.frameCount % cfg.speed !== 0) {
+      const frameSkip = 11 - cfg.speed;
+      if (this.frameCount % frameSkip !== 0) {
         this.animFrameId = requestAnimationFrame(loop);
         return;
       }
