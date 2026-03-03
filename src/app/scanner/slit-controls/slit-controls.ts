@@ -13,6 +13,8 @@ export class SlitControls {
   readonly mode = model<ScanMode>('fixed');
   readonly position = model(50);
   readonly lineWidth = model(1);
+  readonly speed = model(1);
+  readonly outputSize = model(2000);
   readonly state = input<ScanState>('idle');
 
   readonly start = output<void>();

@@ -8,4 +8,6 @@ export interface SlitConfig {
   position: number; // 0-1
   lineWidth: number; // 1-10
   mode: ScanMode;
+  speed: number; // 1-10
+  outputSize: number; // 500-5000
 }

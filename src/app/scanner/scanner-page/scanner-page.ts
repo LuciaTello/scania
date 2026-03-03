@@ -16,6 +16,8 @@ export class ScannerPage {
   readonly mode = signal<ScanMode>('fixed');
   readonly position = signal(50);
   readonly lineWidth = signal(1);
+  readonly speed = signal(1);
+  readonly outputSize = signal(2000);
   readonly state = signal<ScanState>('idle');
 
   readonly slitPosition = computed(() => this.position() / 100);
@@ -46,6 +48,8 @@ export class ScannerPage {
         position: this.slitPosition(),
         lineWidth: this.lineWidth(),
         mode: this.mode(),
+        speed: this.speed(),
+        outputSize: this.outputSize(),
       };
       this.slitScan.startFileScan(config).then(() => {
         this.state.set('complete');
@@ -56,7 +60,9 @@ export class ScannerPage {
         position: this.slitPosition(),
         lineWidth: this.lineWidth(),
         mode: this.mode(),
-      }));
+        speed: this.speed(),
+        outputSize: this.outputSize(),
+      }), () => this.state.set('complete'));
     }
   }
 
