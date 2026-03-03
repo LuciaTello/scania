@@ -26,12 +26,10 @@
   </div>
 </div>
 
-@if (mode() === 'fixed') {
-  <div class="control-group">
-    <label>Slit Position: {{ position() }}%</label>
-    <input type="range" min="0" max="100" [ngModel]="position()" (ngModelChange)="position.set($event)" />
-  </div>
-}
+<div class="control-group">
+  <label>Slit Position: {{ position() }}%</label>
+  <input type="range" min="0" max="100" [ngModel]="position()" (ngModelChange)="position.set($event)" />
+</div>
 
 <div class="control-group">
   <label>Line Width: {{ lineWidth() }}px</label>
