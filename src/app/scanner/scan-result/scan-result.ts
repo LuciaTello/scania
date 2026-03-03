@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, output, input, signal } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, output, input, signal, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SlitScanService } from '../services/slit-scan.service';
 import { AuthService } from '../../services/auth.service';
@@ -21,7 +21,12 @@ export class ScanResult implements AfterViewInit {
     readonly slitScan: SlitScanService,
     private http: HttpClient,
     protected auth: AuthService,
-  ) {}
+  ) {
+    effect(() => {
+      this.state();
+      this.saveState.set('idle');
+    });
+  }
 
   ngAfterViewInit(): void {
     this.canvasReady.emit(this.canvasRef.nativeElement);
