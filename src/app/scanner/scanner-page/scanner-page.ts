@@ -3,7 +3,7 @@ import { VideoSource } from '../video-source/video-source';
 import { SlitControls } from '../slit-controls/slit-controls';
 import { ScanResult } from '../scan-result/scan-result';
 import { SlitScanService } from '../services/slit-scan.service';
-import { ScanState, SlitConfig, SlitOrientation } from '../models/scanner.models';
+import { ScanState, SlitConfig, SlitOrientation, ScanMode } from '../models/scanner.models';
 
 @Component({
   selector: 'app-scanner-page',
@@ -13,6 +13,7 @@ import { ScanState, SlitConfig, SlitOrientation } from '../models/scanner.models
 })
 export class ScannerPage {
   readonly orientation = signal<SlitOrientation>('vertical');
+  readonly mode = signal<ScanMode>('fixed');
   readonly position = signal(50);
   readonly lineWidth = signal(1);
   readonly state = signal<ScanState>('idle');
@@ -22,7 +23,7 @@ export class ScannerPage {
   private videoEl: HTMLVideoElement | null = null;
   private isFile = false;
 
-  constructor(private slitScan: SlitScanService) {}
+  constructor(readonly slitScan: SlitScanService) {}
 
   onVideoReady(video: HTMLVideoElement): void {
     this.videoEl = video;
@@ -44,6 +45,7 @@ export class ScannerPage {
         orientation: this.orientation(),
         position: this.slitPosition(),
         lineWidth: this.lineWidth(),
+        mode: this.mode(),
       };
       this.slitScan.startFileScan(config).then(() => {
         this.state.set('complete');
@@ -53,6 +55,7 @@ export class ScannerPage {
         orientation: this.orientation(),
         position: this.slitPosition(),
         lineWidth: this.lineWidth(),
+        mode: this.mode(),
       }));
     }
   }

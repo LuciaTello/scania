@@ -12,7 +12,7 @@
 
 .control-group > label {
   font-size: 0.85rem;
-  color: #ccc;
+  color: #555;
   font-weight: 500;
 }
 
@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  color: #ddd;
+  color: #333;
   font-size: 0.85rem;
   cursor: pointer;
 }
@@ -61,11 +61,11 @@ button:disabled {
 }
 
 .btn-stop {
-  background: #f44;
+  background: #e53935;
   color: #fff;
 }
 
 .btn-reset {
-  background: #555;
-  color: #fff;
+  background: #bbb;
+  color: #333;
 }

@@ -13,9 +13,25 @@
 </div>
 
 <div class="control-group">
-  <label>Slit Position: {{ position() }}%</label>
-  <input type="range" min="0" max="100" [ngModel]="position()" (ngModelChange)="position.set($event)" />
+  <label>Mode</label>
+  <div class="radio-group">
+    <label>
+      <input type="radio" name="mode" value="fixed" [ngModel]="mode()" (ngModelChange)="mode.set($event)" />
+      Fixed
+    </label>
+    <label>
+      <input type="radio" name="mode" value="sweep" [ngModel]="mode()" (ngModelChange)="mode.set($event)" />
+      Sweep
+    </label>
+  </div>
 </div>
+
+@if (mode() === 'fixed') {
+  <div class="control-group">
+    <label>Slit Position: {{ position() }}%</label>
+    <input type="range" min="0" max="100" [ngModel]="position()" (ngModelChange)="position.set($event)" />
+  </div>
+}
 
 <div class="control-group">
   <label>Line Width: {{ lineWidth() }}px</label>

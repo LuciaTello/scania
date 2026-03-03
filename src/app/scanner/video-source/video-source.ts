@@ -12,11 +12,13 @@ export class VideoSource implements OnDestroy {
   readonly slitPosition = input(0.5);
   readonly slitOrientation = input<'vertical' | 'horizontal'>('vertical');
   readonly lineWidth = input(1);
+  readonly sweepPosition = input(-1);
   readonly videoReady = output<HTMLVideoElement>();
 
   @ViewChild('videoEl') videoRef!: ElementRef<HTMLVideoElement>;
 
   readonly sourceType = signal<VideoSourceType>('webcam');
+  readonly facingMode = signal<'user' | 'environment'>('user');
   private stream: MediaStream | null = null;
   private objectUrl: string | null = null;
 
@@ -28,9 +30,19 @@ export class VideoSource implements OnDestroy {
     }
   }
 
+  async flipCamera(): Promise<void> {
+    this.facingMode.set(this.facingMode() === 'user' ? 'environment' : 'user');
+    if (this.sourceType() === 'webcam') {
+      this.stopStream();
+      await this.startWebcam();
+    }
+  }
+
   async startWebcam(): Promise<void> {
     try {
-      this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: this.facingMode() },
+      });
       const video = this.videoRef.nativeElement;
       video.srcObject = this.stream;
       video.onloadedmetadata = () => {
@@ -39,6 +51,13 @@ export class VideoSource implements OnDestroy {
       };
     } catch (e) {
       console.error('Webcam access denied', e);
+    }
+  }
+
+  private stopStream(): void {
+    if (this.stream) {
+      this.stream.getTracks().forEach(t => t.stop());
+      this.stream = null;
     }
   }
 
@@ -55,16 +74,17 @@ export class VideoSource implements OnDestroy {
   }
 
   get overlayStyle(): Record<string, string> {
+    const pos = this.sweepPosition() >= 0 ? this.sweepPosition() : this.slitPosition();
     if (this.slitOrientation() === 'vertical') {
       return {
-        left: (this.slitPosition() * 100) + '%',
+        left: (pos * 100) + '%',
         top: '0',
         width: this.lineWidth() + 'px',
         height: '100%',
       };
     } else {
       return {
-        top: (this.slitPosition() * 100) + '%',
+        top: (pos * 100) + '%',
         left: '0',
         width: '100%',
         height: this.lineWidth() + 'px',

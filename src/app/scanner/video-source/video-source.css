@@ -12,9 +12,9 @@
 
 .source-controls button {
   padding: 0.4rem 1rem;
-  border: 1px solid #555;
-  background: #2a2a2a;
-  color: #eee;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.85rem;
@@ -23,17 +23,23 @@
 .source-controls button.active {
   background: #0af;
   border-color: #0af;
-  color: #000;
+  color: #fff;
+}
+
+.btn-flip {
+  background: #fff;
+  border: 1px solid #0af;
+  color: #0af;
 }
 
 .source-controls input[type="file"] {
-  color: #ccc;
+  color: #555;
   font-size: 0.85rem;
 }
 
 .video-container {
   position: relative;
-  background: #111;
+  background: #e8e8e8;
   border-radius: 6px;
   overflow: hidden;
 }

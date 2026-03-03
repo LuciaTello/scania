@@ -5,6 +5,7 @@
       [slitPosition]="slitPosition()"
       [slitOrientation]="orientation()"
       [lineWidth]="lineWidth()"
+      [sweepPosition]="slitScan.sweepPosition()"
       (videoReady)="onVideoReady($event)"
     />
   </section>
@@ -13,6 +14,7 @@
     <h2>Controls</h2>
     <app-slit-controls
       [(orientation)]="orientation"
+      [(mode)]="mode"
       [(position)]="position"
       [(lineWidth)]="lineWidth"
       [state]="state()"
