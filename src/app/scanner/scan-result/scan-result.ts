@@ -42,20 +42,31 @@ export class ScanResult implements AfterViewInit {
 
   save(): void {
     this.saveState.set('saving');
-    this.canvasRef.nativeElement.toBlob((blob) => {
-      if (!blob) {
+
+    const dataURL = this.slitScan.getResultDataURL();
+    const blob = this.dataURLtoBlob(dataURL);
+
+    const formData = new FormData();
+    formData.append('image', blob, 'slit-scan.png');
+    formData.append('folder', 'scania/scans');
+
+    this.http.post(`${environment.apiUrl}/upload`, formData).subscribe({
+      next: () => this.saveState.set('saved'),
+      error: (err) => {
+        console.error('Save failed:', err);
         this.saveState.set('error');
-        return;
-      }
+      },
+    });
+  }
 
-      const formData = new FormData();
-      formData.append('image', blob, 'slit-scan.png');
-      formData.append('folder', 'scania/scans');
-
-      this.http.post(`${environment.apiUrl}/upload`, formData).subscribe({
-        next: () => this.saveState.set('saved'),
-        error: () => this.saveState.set('error'),
-      });
-    }, 'image/png');
+  private dataURLtoBlob(dataURL: string): Blob {
+    const [header, data] = dataURL.split(',');
+    const mime = header.match(/:(.*?);/)![1];
+    const binary = atob(data);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return new Blob([bytes], { type: mime });
   }
 }
