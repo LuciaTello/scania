@@ -36,7 +36,7 @@ export class ScanResult implements AfterViewInit {
     const url = this.slitScan.getResultDataURL();
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'slit-scan.png';
+    a.download = this.generateFilename();
     a.click();
   }
 
@@ -47,7 +47,7 @@ export class ScanResult implements AfterViewInit {
     const blob = this.dataURLtoBlob(dataURL);
 
     const formData = new FormData();
-    formData.append('image', blob, 'slit-scan.png');
+    formData.append('image', blob, this.generateFilename());
     formData.append('folder', 'scania/scans');
 
     this.http.post(`${environment.apiUrl}/upload`, formData).subscribe({
@@ -57,6 +57,13 @@ export class ScanResult implements AfterViewInit {
         this.saveState.set('error');
       },
     });
+  }
+
+  private generateFilename(): string {
+    const now = new Date();
+    const d = now.toISOString().slice(0, 10);
+    const t = now.toTimeString().slice(0, 8).replace(/:/g, '-');
+    return `scan-${d}_${t}.png`;
   }
 
   private dataURLtoBlob(dataURL: string): Blob {
