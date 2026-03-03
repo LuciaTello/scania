@@ -86,7 +86,8 @@ export class SlitScanService {
         this.currentCol += cfg.lineWidth;
       }
 
-      if (this.currentCol >= cfg.outputSize) {
+      const limit = isSweep ? Math.min(totalDim, cfg.outputSize) : cfg.outputSize;
+      if (this.currentCol >= limit) {
         this.scanning = false;
         this.sweepPosition.set(-1);
         this.trimResult(cfg.orientation);
