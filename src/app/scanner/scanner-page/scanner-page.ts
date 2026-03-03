@@ -12,9 +12,9 @@ import { ScanState, SlitConfig, SlitOrientation, ScanMode } from '../models/scan
   styleUrl: './scanner-page.css',
 })
 export class ScannerPage {
-  readonly orientation = signal<SlitOrientation>('vertical');
+  readonly orientation = signal<SlitOrientation>('horizontal');
   readonly mode = signal<ScanMode>('sweep');
-  readonly position = signal(50);
+  readonly position = signal(0);
   readonly lineWidth = signal(1);
   readonly speed = signal(1);
   readonly outputSize = signal(2000);
