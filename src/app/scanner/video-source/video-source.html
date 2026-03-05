@@ -15,8 +15,8 @@
 
 <input #fileInput type="file" accept="video/*" hidden (change)="onFileSelected($event)" />
 
-<div class="video-container">
+<div class="video-container" #videoContainer>
   <video #videoEl playsinline muted></video>
-  <div class="slit-overlay" [ngStyle]="overlayStyle"></div>
+  <div class="slit-overlay" [ngStyle]="overlayStyle()"></div>
   <ng-content></ng-content>
 </div>

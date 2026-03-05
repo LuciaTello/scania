@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, ViewChild, input, output, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, AfterViewInit, ViewChild, input, output, signal, computed } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { VideoSourceType } from '../models/scanner.models';
 
@@ -9,7 +9,7 @@ import { VideoSourceType } from '../models/scanner.models';
   styleUrl: './video-source.css',
   host: { '[class.fullscreen]': 'fullscreen()' },
 })
-export class VideoSource implements OnDestroy {
+export class VideoSource implements AfterViewInit, OnDestroy {
   readonly slitPosition = input(0.5);
   readonly slitOrientation = input<'vertical' | 'horizontal'>('vertical');
   readonly lineWidth = input(1);
@@ -20,11 +20,60 @@ export class VideoSource implements OnDestroy {
 
   @ViewChild('videoEl') videoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('videoContainer') containerRef!: ElementRef<HTMLDivElement>;
 
   readonly sourceType = signal<VideoSourceType>('webcam');
   readonly facingMode = signal<'user' | 'environment'>('user');
   private stream: MediaStream | null = null;
   private objectUrl: string | null = null;
+
+  private readonly videoNaturalWidth = signal(0);
+  private readonly videoNaturalHeight = signal(0);
+  private readonly containerSize = signal({ width: 0, height: 0 });
+  private resizeObserver?: ResizeObserver;
+
+  readonly overlayStyle = computed<Record<string, string>>(() => {
+    const pos = this.sweepPosition() >= 0 ? this.sweepPosition() : this.slitPosition();
+    const vw = this.videoNaturalWidth();
+    const vh = this.videoNaturalHeight();
+    const { width: cw, height: ch } = this.containerSize();
+
+    let rX = 0, rY = 0, rW = cw, rH = ch;
+    if (vw > 0 && vh > 0 && cw > 0 && ch > 0) {
+      const va = vw / vh;
+      const ca = cw / ch;
+      if (va > ca) {
+        rW = cw; rH = cw / va; rX = 0; rY = (ch - rH) / 2;
+      } else {
+        rH = ch; rW = ch * va; rY = 0; rX = (cw - rW) / 2;
+      }
+    }
+
+    if (this.slitOrientation() === 'vertical') {
+      return {
+        left: (rX + pos * rW) + 'px',
+        top: rY + 'px',
+        width: this.lineWidth() + 'px',
+        height: rH + 'px',
+      };
+    } else {
+      return {
+        top: (rY + pos * rH) + 'px',
+        left: rX + 'px',
+        width: rW + 'px',
+        height: this.lineWidth() + 'px',
+      };
+    }
+  });
+
+  ngAfterViewInit(): void {
+    const el = this.containerRef.nativeElement;
+    this.resizeObserver = new ResizeObserver(entries => {
+      const { width, height } = entries[0].contentRect;
+      this.containerSize.set({ width, height });
+    });
+    this.resizeObserver.observe(el);
+  }
 
   async toggleSource(type: VideoSourceType): Promise<void> {
     this.cleanup();
@@ -55,6 +104,8 @@ export class VideoSource implements OnDestroy {
       video.srcObject = this.stream;
       video.onloadedmetadata = () => {
         video.play();
+        this.videoNaturalWidth.set(video.videoWidth);
+        this.videoNaturalHeight.set(video.videoHeight);
         this.videoReady.emit(video);
       };
     } catch (e) {
@@ -77,27 +128,10 @@ export class VideoSource implements OnDestroy {
     const video = this.videoRef.nativeElement;
     video.src = this.objectUrl;
     video.onloadedmetadata = () => {
+      this.videoNaturalWidth.set(video.videoWidth);
+      this.videoNaturalHeight.set(video.videoHeight);
       this.videoReady.emit(video);
     };
-  }
-
-  get overlayStyle(): Record<string, string> {
-    const pos = this.sweepPosition() >= 0 ? this.sweepPosition() : this.slitPosition();
-    if (this.slitOrientation() === 'vertical') {
-      return {
-        left: (pos * 100) + '%',
-        top: '0',
-        width: this.lineWidth() + 'px',
-        height: '100%',
-      };
-    } else {
-      return {
-        top: (pos * 100) + '%',
-        left: '0',
-        width: '100%',
-        height: this.lineWidth() + 'px',
-      };
-    }
   }
 
   private cleanup(): void {
@@ -113,5 +147,6 @@ export class VideoSource implements OnDestroy {
 
   ngOnDestroy(): void {
     this.cleanup();
+    this.resizeObserver?.disconnect();
   }
 }
