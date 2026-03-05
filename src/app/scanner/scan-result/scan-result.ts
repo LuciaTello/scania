@@ -1,5 +1,7 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, output, input, signal, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Capacitor } from '@capacitor/core';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 import { SlitScanService } from '../services/slit-scan.service';
 import { AuthService } from '../../services/auth.service';
 import { ScanState } from '../models/scanner.models';
@@ -33,12 +35,25 @@ export class ScanResult implements AfterViewInit {
     this.canvasReady.emit(this.canvasRef.nativeElement);
   }
 
-  download(): void {
-    const url = this.slitScan.getResultDataURL();
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = this.generateFilename();
-    a.click();
+  async download(): Promise<void> {
+    const dataURL = this.slitScan.getResultDataURL();
+    const filename = this.generateFilename();
+
+    if (Capacitor.isNativePlatform()) {
+      const base64 = dataURL.split(',')[1];
+      await Filesystem.writeFile({
+        path: 'Pictures/Scania/' + filename,
+        data: base64,
+        directory: Directory.ExternalStorage,
+        recursive: true,
+      });
+      this.saveState.set('saved');
+    } else {
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = filename;
+      a.click();
+    }
   }
 
   save(): void {
