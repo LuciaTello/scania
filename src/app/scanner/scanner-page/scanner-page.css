@@ -24,19 +24,18 @@
   grid-area: viewport;
 }
 
-.panel.result-area {
-  grid-area: viewport;
+.video-result-wrapper {
+  position: relative;
+}
+
+.result-overlay {
+  position: absolute;
+  inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: transparent;
-  box-shadow: none;
 }
 
-.panel.result-area h2 {
-  display: none;
-}
-
-.result-area :deep(.result-actions) {
+.result-overlay :deep(.result-actions) {
   pointer-events: auto;
 }
 

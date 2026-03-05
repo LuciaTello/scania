@@ -101,20 +101,20 @@
   <div class="scanner-layout">
     <section class="panel source-area">
       <h2>Video Source</h2>
-      <app-video-source
-        [slitPosition]="slitPosition()"
-        [slitOrientation]="orientation()"
-        [lineWidth]="lineWidth()"
-        [sweepPosition]="slitScan.sweepPosition()"
-        (videoReady)="onVideoReady($event)"
-      />
-    </section>
-
-    <section class="panel result-area">
-      <app-scan-result
-        [state]="state()"
-        (canvasReady)="onCanvasReady($event)"
-      />
+      <div class="video-result-wrapper">
+        <app-video-source
+          [slitPosition]="slitPosition()"
+          [slitOrientation]="orientation()"
+          [lineWidth]="lineWidth()"
+          [sweepPosition]="slitScan.sweepPosition()"
+          (videoReady)="onVideoReady($event)"
+        />
+        <app-scan-result
+          class="result-overlay"
+          [state]="state()"
+          (canvasReady)="onCanvasReady($event)"
+        />
+      </div>
     </section>
 
     <section class="panel controls-area">
