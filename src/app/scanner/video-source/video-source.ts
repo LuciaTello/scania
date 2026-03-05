@@ -24,6 +24,7 @@ export class VideoSource implements AfterViewInit, OnDestroy {
 
   readonly sourceType = signal<VideoSourceType>('webcam');
   readonly facingMode = signal<'user' | 'environment'>('user');
+  readonly videoActive = signal(false);
   private stream: MediaStream | null = null;
   private objectUrl: string | null = null;
 
@@ -104,6 +105,7 @@ export class VideoSource implements AfterViewInit, OnDestroy {
       video.srcObject = this.stream;
       video.onloadedmetadata = () => {
         video.play();
+        this.videoActive.set(true);
         this.videoNaturalWidth.set(video.videoWidth);
         this.videoNaturalHeight.set(video.videoHeight);
         this.videoReady.emit(video);
@@ -128,6 +130,7 @@ export class VideoSource implements AfterViewInit, OnDestroy {
     const video = this.videoRef.nativeElement;
     video.src = this.objectUrl;
     video.onloadedmetadata = () => {
+      this.videoActive.set(true);
       this.videoNaturalWidth.set(video.videoWidth);
       this.videoNaturalHeight.set(video.videoHeight);
       this.videoReady.emit(video);

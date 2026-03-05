@@ -16,7 +16,10 @@
 <input #fileInput type="file" accept="video/*" hidden (change)="onFileSelected($event)" />
 
 <div class="video-container" #videoContainer>
-  <video #videoEl playsinline muted></video>
+  @if (!videoActive()) {
+    <img class="placeholder" src="foucault.jpg" alt="" />
+  }
+  <video #videoEl playsinline muted [hidden]="!videoActive()"></video>
   <div class="slit-overlay" [ngStyle]="overlayStyle()"></div>
   <ng-content></ng-content>
 </div>

@@ -51,6 +51,20 @@ video {
   object-fit: contain;
 }
 
+.placeholder {
+  display: block;
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+:host(.fullscreen) .placeholder {
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 :host(.fullscreen) .video-container {
   width: 100%;
   height: 100%;
