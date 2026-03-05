@@ -20,7 +20,7 @@
   grid-area: viewport;
 }
 
-.result-area {
+.panel.result-area {
   grid-area: viewport;
   z-index: 1;
   pointer-events: none;
@@ -28,7 +28,7 @@
   box-shadow: none;
 }
 
-.result-area h2 {
+.panel.result-area h2 {
   display: none;
 }
 
