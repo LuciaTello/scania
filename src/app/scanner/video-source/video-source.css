@@ -67,9 +67,11 @@ video {
 
 .slit-overlay {
   position: absolute;
-  background: rgba(0, 170, 255, 0.6);
+  background: rgba(255, 30, 30, 0.85);
   pointer-events: none;
-  z-index: 1;
+  z-index: 10;
+  min-width: 3px;
+  min-height: 3px;
 }
 
 .video-container ::ng-deep .result-overlay {
