@@ -24,20 +24,6 @@
   grid-area: viewport;
 }
 
-.video-result-wrapper {
-  position: relative;
-}
-
-.result-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.result-overlay :deep(.result-actions) {
-  pointer-events: auto;
-}
 
 .controls-area {
   grid-area: controls;

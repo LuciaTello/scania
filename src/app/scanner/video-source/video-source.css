@@ -71,3 +71,14 @@ video {
   pointer-events: none;
   z-index: 1;
 }
+
+.video-container ::ng-deep .result-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.video-container ::ng-deep .result-overlay .result-actions {
+  pointer-events: auto;
+}
