@@ -3,7 +3,7 @@ import { VideoSource } from '../video-source/video-source';
 import { SlitControls } from '../slit-controls/slit-controls';
 import { ScanResult } from '../scan-result/scan-result';
 import { SlitScanService } from '../services/slit-scan.service';
-import { ScanState, SlitConfig, SlitOrientation, ScanMode } from '../models/scanner.models';
+import { ScanState, SlitConfig, SlitOrientation } from '../models/scanner.models';
 
 @Component({
   selector: 'app-scanner-page',
@@ -13,7 +13,6 @@ import { ScanState, SlitConfig, SlitOrientation, ScanMode } from '../models/scan
 })
 export class ScannerPage {
   readonly orientation = signal<SlitOrientation>('horizontal');
-  readonly mode = signal<ScanMode>('sweep');
   readonly position = signal(0);
   readonly lineWidth = signal(1);
   readonly speed = signal(1);
@@ -47,7 +46,6 @@ export class ScannerPage {
         orientation: this.orientation(),
         position: this.slitPosition(),
         lineWidth: this.lineWidth(),
-        mode: this.mode(),
         speed: this.speed(),
         outputSize: this.outputSize(),
       };
@@ -59,7 +57,6 @@ export class ScannerPage {
         orientation: this.orientation(),
         position: this.slitPosition(),
         lineWidth: this.lineWidth(),
-        mode: this.mode(),
         speed: this.speed(),
         outputSize: this.outputSize(),
       }), () => this.state.set('complete'));

@@ -35,17 +35,8 @@ export class SlitScanService {
     this.sourceCanvas.width = vw;
     this.sourceCanvas.height = vh;
 
-    const isSweepMode = config().mode === 'sweep';
-    if (isSweepMode) {
-      this.resultCanvas.width = vw;
-      this.resultCanvas.height = vh;
-    } else if (config().orientation === 'vertical') {
-      this.resultCanvas.width = config().outputSize;
-      this.resultCanvas.height = vh;
-    } else {
-      this.resultCanvas.width = vw;
-      this.resultCanvas.height = config().outputSize;
-    }
+    this.resultCanvas.width = vw;
+    this.resultCanvas.height = vh;
     this.resultCtx.clearRect(0, 0, this.resultCanvas.width, this.resultCanvas.height);
 
     this.currentCol = 0;
@@ -67,15 +58,10 @@ export class SlitScanService {
 
       this.sourceCtx.drawImage(this.videoEl, 0, 0, vw, vh);
 
-      const isSweep = cfg.mode === 'sweep';
       const totalDim = cfg.orientation === 'vertical' ? vw : vh;
-      const sweepPos = isSweep
-        ? (this.currentCol % totalDim) / totalDim
-        : cfg.position;
+      const sweepPos = (this.currentCol % totalDim) / totalDim;
 
-      if (isSweep) {
-        this.sweepPosition.set(sweepPos);
-      }
+      this.sweepPosition.set(sweepPos);
 
       if (cfg.orientation === 'vertical') {
         const slitX = Math.round(sweepPos * (vw - cfg.lineWidth));
@@ -89,7 +75,7 @@ export class SlitScanService {
         this.currentCol += cfg.lineWidth;
       }
 
-      const limit = isSweep ? Math.min(totalDim, cfg.outputSize) : cfg.outputSize;
+      const limit = Math.min(totalDim, cfg.outputSize);
       if (this.currentCol >= limit) {
         this.scanning = false;
         this.sweepPosition.set(-1);
@@ -122,7 +108,6 @@ export class SlitScanService {
     const fps = 30;
     const allFrames = Math.floor(duration * fps);
     const maxFrames = Math.min(allFrames, Math.floor(config.outputSize / config.lineWidth));
-    const isSweep = config.mode === 'sweep';
 
     if (config.orientation === 'vertical') {
       this.resultCanvas.width = maxFrames * config.lineWidth;
@@ -148,10 +133,8 @@ export class SlitScanService {
 
       this.sourceCtx.drawImage(this.videoEl, 0, 0, vw, vh);
 
-      const sweepPos = isSweep ? i / allFrames : config.position;
-      if (isSweep) {
-        this.sweepPosition.set(sweepPos);
-      }
+      const sweepPos = i / allFrames;
+      this.sweepPosition.set(sweepPos);
 
       if (config.orientation === 'vertical') {
         const slitX = Math.round(sweepPos * (vw - config.lineWidth));
@@ -208,19 +191,6 @@ export class SlitScanService {
       const trimmed = this.resultCtx.getImageData(0, 0, this.resultCanvas.width, this.currentCol);
       this.resultCanvas.height = this.currentCol;
       this.resultCtx.putImageData(trimmed, 0, 0);
-    }
-  }
-
-  private expandResultCanvas(orientation: SlitOrientation, lineWidth: number): void {
-    const extra = 1000;
-    if (orientation === 'vertical') {
-      const imgData = this.resultCtx.getImageData(0, 0, this.resultCanvas.width, this.resultCanvas.height);
-      this.resultCanvas.width += extra;
-      this.resultCtx.putImageData(imgData, 0, 0);
-    } else {
-      const imgData = this.resultCtx.getImageData(0, 0, this.resultCanvas.width, this.resultCanvas.height);
-      this.resultCanvas.height += extra;
-      this.resultCtx.putImageData(imgData, 0, 0);
     }
   }
 }

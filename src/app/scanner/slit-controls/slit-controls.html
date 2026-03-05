@@ -13,20 +13,6 @@
 </div>
 
 <div class="control-group">
-  <label>Mode</label>
-  <div class="radio-group">
-    <label>
-      <input type="radio" name="mode" value="fixed" [ngModel]="mode()" (ngModelChange)="mode.set($event)" />
-      Fixed
-    </label>
-    <label>
-      <input type="radio" name="mode" value="sweep" [ngModel]="mode()" (ngModelChange)="mode.set($event)" />
-      Sweep
-    </label>
-  </div>
-</div>
-
-<div class="control-group">
   <label>Slit Position: {{ position() }}%</label>
   <input type="range" min="0" max="100" [ngModel]="position()" (ngModelChange)="position.set($event)" />
 </div>
@@ -40,13 +26,6 @@
   <label>Speed: {{ speed() }}</label>
   <input type="range" min="1" max="10" [ngModel]="speed()" (ngModelChange)="speed.set($event)" />
 </div>
-
-@if (mode() !== 'sweep') {
-  <div class="control-group">
-    <label>Output Size: {{ outputSize() }}px</label>
-    <input type="range" min="500" max="5000" step="500" [ngModel]="outputSize()" (ngModelChange)="outputSize.set($event)" />
-  </div>
-}
 
 <div class="actions">
   @if (state() === 'previewing' || state() === 'idle') {
