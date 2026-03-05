@@ -4,16 +4,13 @@
 
 @if (state() === 'complete' && !hideActions()) {
   <div class="result-actions">
-    <button class="btn-download" (click)="download()">Download</button>
-    @if (auth.isAuthenticated()) {
-      <button class="btn-save" (click)="save()" [disabled]="saveState() === 'saving' || saveState() === 'saved'">
-        @switch (saveState()) {
-          @case ('saving') { Saving... }
-          @case ('saved') { Saved }
-          @case ('error') { Retry }
-          @default { Save }
-        }
-      </button>
-    }
+    <button class="btn-save" (click)="saveEverywhere()" [disabled]="saveState() === 'saving' || saveState() === 'saved'">
+      @switch (saveState()) {
+        @case ('saving') { Saving... }
+        @case ('saved') { Saved ✓ }
+        @case ('error') { Retry }
+        @default { Save }
+      }
+    </button>
   </div>
 }

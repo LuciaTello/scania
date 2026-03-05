@@ -113,12 +113,8 @@ export class ScannerPage implements OnInit, OnDestroy {
     this.settingsOpen.set(!this.settingsOpen());
   }
 
-  onMobileDownload(): void {
-    this.scanResultRef?.download();
-  }
-
   onMobileSave(): void {
-    this.scanResultRef?.save();
+    this.scanResultRef?.saveEverywhere();
   }
 
   onDrawerWebcam(): void {

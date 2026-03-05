@@ -35,10 +35,12 @@ export class ScanResult implements AfterViewInit {
     this.canvasReady.emit(this.canvasRef.nativeElement);
   }
 
-  async download(): Promise<void> {
+  async saveEverywhere(): Promise<void> {
+    this.saveState.set('saving');
     const dataURL = this.slitScan.getResultDataURL();
     const filename = this.generateFilename();
 
+    // Always save to gallery (native) or browser download (web)
     if (Capacitor.isNativePlatform()) {
       const base64 = dataURL.split(',')[1];
       await Filesystem.writeFile({
@@ -47,32 +49,25 @@ export class ScanResult implements AfterViewInit {
         directory: Directory.ExternalStorage,
         recursive: true,
       });
-      this.saveState.set('saved');
     } else {
       const a = document.createElement('a');
       a.href = dataURL;
       a.download = filename;
       a.click();
     }
-  }
 
-  save(): void {
-    this.saveState.set('saving');
+    this.saveState.set('saved');
 
-    const dataURL = this.slitScan.getResultDataURL();
-    const blob = this.dataURLtoBlob(dataURL);
-
-    const formData = new FormData();
-    formData.append('image', blob, this.generateFilename());
-    formData.append('folder', 'scania/scans');
-
-    this.http.post(`${environment.apiUrl}/upload`, formData).subscribe({
-      next: () => this.saveState.set('saved'),
-      error: (err) => {
-        console.error('Save failed:', err);
-        this.saveState.set('error');
-      },
-    });
+    // Also upload to cloud if online
+    if (navigator.onLine) {
+      const blob = this.dataURLtoBlob(dataURL);
+      const formData = new FormData();
+      formData.append('image', blob, filename);
+      formData.append('folder', 'scania/scans');
+      this.http.post(`${environment.apiUrl}/upload`, formData).subscribe({
+        error: (err) => console.error('Cloud upload failed:', err),
+      });
+    }
   }
 
   private generateFilename(): string {
