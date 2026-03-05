@@ -10,13 +10,14 @@
         [hideSourceControls]="true"
         [fullscreen]="true"
         (videoReady)="onVideoReady($event)"
-      />
-      <app-scan-result
-        class="viewfinder-result"
-        [state]="state()"
-        [hideActions]="true"
-        (canvasReady)="onCanvasReady($event)"
-      />
+      >
+        <app-scan-result
+          class="result-overlay"
+          [state]="state()"
+          [hideActions]="true"
+          (canvasReady)="onCanvasReady($event)"
+        />
+      </app-video-source>
     </div>
 
     <div class="camera-bottom-bar">

@@ -79,6 +79,17 @@ video {
   pointer-events: none;
 }
 
+.video-container ::ng-deep .result-overlay .result-container {
+  width: 100%;
+  height: 100%;
+}
+
+.video-container ::ng-deep .result-overlay canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .video-container ::ng-deep .result-overlay .result-actions {
   pointer-events: auto;
 }
