@@ -1,15 +1,19 @@
-<div class="source-controls">
-  <button [class.active]="sourceType() === 'webcam'" (click)="toggleSource('webcam')">Webcam</button>
-  <button [class.active]="sourceType() === 'file'" (click)="toggleSource('file')">Upload</button>
-  @if (sourceType() === 'webcam') {
-    <button (click)="flipCamera()" class="btn-flip" [attr.title]="facingMode() === 'user' ? 'Switch to rear camera' : 'Switch to front camera'">
-      {{ facingMode() === 'user' ? 'Rear' : 'Front' }}
-    </button>
-  }
-  @if (sourceType() === 'file') {
-    <input type="file" accept="video/*" (change)="onFileSelected($event)" />
-  }
-</div>
+@if (!hideSourceControls()) {
+  <div class="source-controls">
+    <button [class.active]="sourceType() === 'webcam'" (click)="toggleSource('webcam')">Webcam</button>
+    <button [class.active]="sourceType() === 'file'" (click)="toggleSource('file')">Upload</button>
+    @if (sourceType() === 'webcam') {
+      <button (click)="flipCamera()" class="btn-flip" [attr.title]="facingMode() === 'user' ? 'Switch to rear camera' : 'Switch to front camera'">
+        {{ facingMode() === 'user' ? 'Rear' : 'Front' }}
+      </button>
+    }
+    @if (sourceType() === 'file') {
+      <input type="file" accept="video/*" (change)="onFileSelected($event)" />
+    }
+  </div>
+}
+
+<input #fileInput type="file" accept="video/*" hidden (change)="onFileSelected($event)" />
 
 <div class="video-container">
   <video #videoEl playsinline muted></video>

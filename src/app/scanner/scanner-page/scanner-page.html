@@ -1,34 +1,135 @@
-<div class="scanner-layout">
-  <section class="panel source-area">
-    <h2>Video Source</h2>
-    <app-video-source
-      [slitPosition]="slitPosition()"
-      [slitOrientation]="orientation()"
-      [lineWidth]="lineWidth()"
-      [sweepPosition]="slitScan.sweepPosition()"
-      (videoReady)="onVideoReady($event)"
-    />
-  </section>
+@if (isMobile()) {
+  <!-- Mobile camera layout -->
+  <div class="camera-layout">
+    <div class="camera-viewfinder">
+      <app-video-source
+        [slitPosition]="slitPosition()"
+        [slitOrientation]="orientation()"
+        [lineWidth]="lineWidth()"
+        [sweepPosition]="slitScan.sweepPosition()"
+        [hideSourceControls]="true"
+        [fullscreen]="true"
+        (videoReady)="onVideoReady($event)"
+      />
+      <app-scan-result
+        class="viewfinder-result"
+        [state]="state()"
+        [hideActions]="true"
+        (canvasReady)="onCanvasReady($event)"
+      />
+    </div>
 
-  <section class="panel result-area">
-    <app-scan-result
-      [state]="state()"
-      (canvasReady)="onCanvasReady($event)"
-    />
-  </section>
+    <div class="camera-bottom-bar">
+      <!-- Left: save/download -->
+      <div class="bar-left">
+        @if (state() === 'complete') {
+          <button class="bar-btn" (click)="onMobileDownload()" title="Download">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </button>
+          @if (auth.isAuthenticated()) {
+            <button class="bar-btn" (click)="onMobileSave()" [disabled]="scanResultRef.saveState() === 'saving' || scanResultRef.saveState() === 'saved'" title="Save">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+            </button>
+          }
+        }
+      </div>
 
-  <section class="panel controls-area">
-    <h2>Controls</h2>
-    <app-slit-controls
-      [(orientation)]="orientation"
-      [(position)]="position"
-      [(lineWidth)]="lineWidth"
-      [(speed)]="speed"
-      [(outputSize)]="outputSize"
-      [state]="state()"
-      (start)="onStart()"
-      (stop)="onStop()"
-      (resetScan)="onReset()"
-    />
-  </section>
-</div>
+      <!-- Center: shutter -->
+      <button
+        class="shutter-btn"
+        [class.scanning]="state() === 'scanning'"
+        [disabled]="state() === 'idle'"
+        (click)="onShutterPress()"
+      >
+        <span class="shutter-inner"></span>
+      </button>
+
+      <!-- Right: hamburger -->
+      <div class="bar-right">
+        <button class="bar-btn" (click)="toggleSettings()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Settings drawer -->
+    @if (settingsOpen()) {
+      <div class="settings-backdrop" (click)="toggleSettings()"></div>
+      <div class="settings-drawer">
+        <div class="drawer-handle"></div>
+        <div class="drawer-section">
+          <h3>Source</h3>
+          <div class="drawer-source-buttons">
+            <button (click)="onDrawerWebcam()">Webcam</button>
+            <button (click)="onDrawerUpload()">Upload</button>
+            <button (click)="onDrawerFlip()">Flip</button>
+          </div>
+        </div>
+        <div class="drawer-section">
+          <h3>Settings</h3>
+          <app-slit-controls
+            [(orientation)]="orientation"
+            [(position)]="position"
+            [(lineWidth)]="lineWidth"
+            [(speed)]="speed"
+            [(outputSize)]="outputSize"
+            [state]="state()"
+            [hideActions]="true"
+            [darkTheme]="true"
+            (start)="onStart()"
+            (stop)="onStop()"
+            (resetScan)="onReset()"
+          />
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <!-- Desktop layout -->
+  <div class="scanner-layout">
+    <section class="panel source-area">
+      <h2>Video Source</h2>
+      <app-video-source
+        [slitPosition]="slitPosition()"
+        [slitOrientation]="orientation()"
+        [lineWidth]="lineWidth()"
+        [sweepPosition]="slitScan.sweepPosition()"
+        (videoReady)="onVideoReady($event)"
+      />
+    </section>
+
+    <section class="panel result-area">
+      <app-scan-result
+        [state]="state()"
+        (canvasReady)="onCanvasReady($event)"
+      />
+    </section>
+
+    <section class="panel controls-area">
+      <h2>Controls</h2>
+      <app-slit-controls
+        [(orientation)]="orientation"
+        [(position)]="position"
+        [(lineWidth)]="lineWidth"
+        [(speed)]="speed"
+        [(outputSize)]="outputSize"
+        [state]="state()"
+        (start)="onStart()"
+        (stop)="onStop()"
+        (resetScan)="onReset()"
+      />
+    </section>
+  </div>
+}

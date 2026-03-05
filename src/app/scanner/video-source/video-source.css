@@ -51,6 +51,20 @@ video {
   object-fit: contain;
 }
 
+:host(.fullscreen) .video-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background: #000;
+}
+
+:host(.fullscreen) video {
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .slit-overlay {
   position: absolute;
   background: rgba(0, 170, 255, 0.6);

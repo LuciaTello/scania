@@ -14,6 +14,7 @@ export class ScanResult implements AfterViewInit {
   @ViewChild('resultCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   readonly state = input<ScanState>('idle');
+  readonly hideActions = input(false);
   readonly canvasReady = output<HTMLCanvasElement>();
   readonly saveState = signal<'idle' | 'saving' | 'saved' | 'error'>('idle');
 

@@ -2,7 +2,7 @@
   <canvas #resultCanvas></canvas>
 </div>
 
-@if (state() === 'complete') {
+@if (state() === 'complete' && !hideActions()) {
   <div class="result-actions">
     <button class="btn-download" (click)="download()">Download</button>
     @if (auth.isAuthenticated()) {

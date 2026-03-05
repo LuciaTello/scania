@@ -7,15 +7,19 @@ import { VideoSourceType } from '../models/scanner.models';
   imports: [NgStyle],
   templateUrl: './video-source.html',
   styleUrl: './video-source.css',
+  host: { '[class.fullscreen]': 'fullscreen()' },
 })
 export class VideoSource implements OnDestroy {
   readonly slitPosition = input(0.5);
   readonly slitOrientation = input<'vertical' | 'horizontal'>('vertical');
   readonly lineWidth = input(1);
   readonly sweepPosition = input(-1);
+  readonly hideSourceControls = input(false);
+  readonly fullscreen = input(false);
   readonly videoReady = output<HTMLVideoElement>();
 
   @ViewChild('videoEl') videoRef!: ElementRef<HTMLVideoElement>;
+  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
   readonly sourceType = signal<VideoSourceType>('webcam');
   readonly facingMode = signal<'user' | 'environment'>('user');
@@ -28,6 +32,10 @@ export class VideoSource implements OnDestroy {
     if (type === 'webcam') {
       await this.startWebcam();
     }
+  }
+
+  triggerFileSelect(): void {
+    this.fileInputRef?.nativeElement.click();
   }
 
   async flipCamera(): Promise<void> {

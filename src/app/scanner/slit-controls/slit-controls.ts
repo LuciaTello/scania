@@ -7,6 +7,7 @@ import { SlitOrientation, ScanState } from '../models/scanner.models';
   imports: [FormsModule],
   templateUrl: './slit-controls.html',
   styleUrl: './slit-controls.css',
+  host: { '[class.dark]': 'darkTheme()' },
 })
 export class SlitControls {
   readonly orientation = model<SlitOrientation>('vertical');
@@ -15,6 +16,8 @@ export class SlitControls {
   readonly speed = model(1);
   readonly outputSize = model(2000);
   readonly state = input<ScanState>('idle');
+  readonly hideActions = input(false);
+  readonly darkTheme = input(false);
 
   readonly start = output<void>();
   readonly stop = output<void>();

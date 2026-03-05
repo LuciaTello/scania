@@ -69,3 +69,16 @@ button:disabled {
   background: #bbb;
   color: #333;
 }
+
+/* Dark theme for mobile drawer */
+:host(.dark) .control-group > label {
+  color: #ccc;
+}
+
+:host(.dark) .radio-group label {
+  color: #eee;
+}
+
+:host(.dark) input[type="range"] {
+  accent-color: #fff;
+}
